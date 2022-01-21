@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.measure.quantity.Mass;
 import javax.validation.Valid;
-
+import static javax.measure.unit.SI.KILOGRAM;
+import org.jscience.physics.amount.Amount;
+import org.jscience.physics.model.RelativisticModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,8 +67,26 @@ public class EmployeeWebservice {
 		employeeRepository.delete(emp);
 		response.put("Deleted", Boolean.TRUE);
 		return response;
-		
 	}
+	
+	@GetMapping("/confDemo")
+    public Map<String, String> confDemo() {
+ 
+        Map<String, String> response = new HashMap<>();
+        RelativisticModel.select();
+        String energy = System.getenv().get("ENERGY");
+ 
+        if (energy == null) {
+            energy = "72 GeV";
+        }
+ 
+        Amount<Mass> m = Amount.valueOf(energy).to(KILOGRAM);
+ 
+        response.put("science", "E=mc^2: " + energy + " = " + m.toString());
+ 
+        return response;
+ 
+    }
 	
 
 }
